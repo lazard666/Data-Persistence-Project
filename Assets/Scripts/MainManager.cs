@@ -46,7 +46,7 @@ public class MainManager : MonoBehaviour
         
         else
         {
-            Debug.Log("Du hast keinen Namen angegeben");
+            Debug.Log("You dont Enter a Name");
         }
     }
 }

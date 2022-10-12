@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public float bestScore;
+    public string bestPlayername;
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
@@ -26,7 +28,11 @@ public class GameManager : MonoBehaviour
     {
         LoadHighScore();
 
-        BestScoreText.text = $"Bestscore : {bestScore}";
+        if (bestPlayername != "" && bestScore != 0)
+        {
+            BestScoreText.text = $"Bestscore : {bestPlayername} {bestScore}";
+        }
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
 
@@ -89,16 +95,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void BacktoMainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
     [System.Serializable]
     class SaveData
     {
         public float highscore;
+        public string playerName;
     }
 
     public void SaveHighscore()
     {
         SaveData data = new SaveData();
         data.highscore = bestScore;
+        data.playerName = MainManager.instance.playerName;
 
         string json = JsonUtility.ToJson(data);
 
@@ -114,6 +127,7 @@ public class GameManager : MonoBehaviour
             SaveData data = JsonUtility.FromJson<SaveData>(json);
 
             bestScore = data.highscore;
+            bestPlayername = data.playerName;
         }
     }
 }
